@@ -2,9 +2,17 @@
   import { onMount, createEventDispatcher } from 'svelte';
   import { makeCamera, detectFrameBarcode } from '@parkingboss/barcam';
 
+  const dispatch = createEventDispatcher();
+
   export let barcode = false;
 
-  const dispatch = createEventDispatcher();
+  export let noFlashlight = false;
+  export let disableFlashlight = false;
+  export let flashlightText = 'Flashlight';
+
+  export let noCapture = false;
+  export let disableCapture = false;
+  export let captureText = 'Capture';
 
   function dispatchImage(photo) {
     dispatch('image', { photo });
@@ -14,18 +22,21 @@
     dispatch('barcode', result);
   }
 
-  let busy = false;
   let videoEl = null;
   let camera = null;
+
+  let busy = false;
   let flashlight = null;
-  let stopWatching = null;
 
   $: loading = !camera;
   $: video = camera && camera.video;
   $: fallback = camera && !camera.video;
 
+  // This is done as a function to prevent changes to stopWatching from
+  // re-triggering the toggleBarcode.
   $: if (video) toggleBarcode(barcode);
 
+  let stopWatching = null;
   function toggleBarcode(barcode) {
     if (stopWatching) stopWatching();
     if (barcode) stopWatching = camera.detectAllBarcodes(options, dispatchBarcode);
@@ -36,19 +47,28 @@
 
     if (!frame) return;
 
-    if (barcode) {
-      try {
-        busy = true;
-        const barcodeDetection = detectFrameBarcode(frame);
-        const value = await barcodeDetection.value;
-        if (value) {
-          dispatchBarcode({ value, photo: barcodeDetection.photo });
-        }
-      } finally{
-        busy = false;
+
+    try {
+      if (barcode) {
+
+      } else {
+        dispatchImage(frame);
       }
-    } else {
-      dispatchImage(frame);
+    } finally{
+      busy = false;
+    }
+  }
+
+  async function checkFrameForBarcode(frame) {
+    try {
+      busy = true;
+      const barcodeDetection = detectFrameBarcode(frame);
+      const value = await barcodeDetection.value;
+      if (value) {
+        dispatchBarcode({ value, photo: barcodeDetection.photo });
+      }
+    } finally {
+      busy = false;
     }
   }
 
@@ -89,22 +109,23 @@
   <video autoplay=true muted=true playsinline bind:this={videoEl} />
   <input type='file' accept='image/*' capture='environment' disabled={busy} on:input={fileChanged} />
   {#if video}
-      <nav>
-        <ul>
-          {#if camera.hasFlashlight()}
-            <li>
-              <button on:click={flashlightClicked} class='flashlight {flashlight ? 'on' : 'off'}'>
-                Flashlight
-              </button>
-            </li>
-          {/if}
 
-          {#if !barcode}
-            <li>
-              <button on:click={captureClicked} class='capture'>Photo</button>
-            </li>
-          {/if}
-        </ul>
-      </nav>
+    <nav>
+      {#if !noFlashlight && camera.hasFlashlight()}
+
+        <button on:click={flashlightClicked}
+                class='flashlight {flashlight ? 'on' : 'off'}'
+                disabled={disableFlashlight}>{flashlightText}</button>
+
+      {/if}
+      {#if !noCapture && !barcode}
+
+        <button on:click={captureClicked}
+                class='capture'
+                disabled={disableCapture || busy}>{captureText}</button>
+
+      {/if}
+    </nav>
+
     {/if}
 </figure>
