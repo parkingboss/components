@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href=./app.scss rel=stylesheet />
+    <style>
+      body {
+        padding-top: 2em;
+      }
+      nav.mode {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2em;
+        background-color: cornflowerblue;
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class=mode>
+      <label>
+        Light
+        <input type=radio name=mode value=light checked />
+      </label>
+      <label>
+        Dark
+        <input type=radio name=mode value=dark />
+      </label>
+      <label>
+        Alternate
+        <input type=radio name=mode value=alternate />
+      </label>
+    </nav>
+    <h1>This is an h1</h1>
+    <h2>This is an h2</h2>
+    <h3>This is an h3</h3>
+    <h4>This is an h4</h4>
+    <h5>This is an h5</h5>
+    <h6>This is an h6</h6>
+
+    <section class="grayscale">
+      <table>
+        <caption>Grayscale Colors</caption>
+        <tbody>
+          <tr>
+            <th>Foreground:</th>
+            <td>Black</td>
+            <td>Gray 1</td>
+            <td>Gray 2</td>
+            <td>Gray 3</td>
+            <td>Gray 4</td>
+            <td>Gray 5</td>
+            <td>Gray 6</td>
+            <td>White</td>
+          </tr>
+          <tr>
+            <th>Background</th>
+            <td>Black</td>
+            <td>Gray 1</td>
+            <td>Gray 2</td>
+            <td>Gray 3</td>
+            <td>Gray 4</td>
+            <td>Gray 5</td>
+            <td>Gray 6</td>
+            <td>White</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="colors">
+      <table>
+        <caption>Colors</caption>
+        <tbody>
+          <tr>
+            <th>Foreground:</th>
+            <td>Red</td>
+            <td>Orange</td>
+            <td>Yellow</td>
+            <td>Dark Green</td>
+            <td>Green</td>
+            <td>Light Green</td>
+            <td>Dark Blue</td>
+            <td>Blue</td>
+            <td>Light Blue</td>
+            <td>Dark Purple</td>
+            <td>Purple</td>
+          </tr>
+          <tr>
+            <th>Background</th>
+            <td>Red</td>
+            <td>Orange</td>
+            <td>Yellow</td>
+            <td>Dark Green</td>
+            <td>Green</td>
+            <td>Light Green</td>
+            <td>Dark Blue</td>
+            <td>Blue</td>
+            <td>Light Blue</td>
+            <td>Dark Purple</td>
+            <td>Purple</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <script src=./app.js></script>
+    <script>
+      let stopAlternating = null;
+      document.querySelector('nav.mode').addEventListener('input', evt => {
+        if (stopAlternating) stopAlternating();
+        if (evt.target.value === 'alternate') {
+          const id = setInterval(() => {
+            document.documentElement.className = document.documentElement.className === 'dark' ? 'light' : 'dark';
+          }, 3000);
+          stopAlternating = () => clearInterval(id);
+        } else {
+          document.documentElement.className = evt.target.value;
+        }
+      });
+    </script>
+  </body>
+</html>
