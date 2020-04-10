@@ -16,7 +16,7 @@
   {/if}
 
   {#if address}
-    <Address {...address} />
+    <Address {address} />
   {/if}
 
   <slot />
