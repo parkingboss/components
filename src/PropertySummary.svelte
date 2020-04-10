@@ -2,10 +2,15 @@
   import Image from './Image.svelte';
   import Address from './Address.svelte';
 
-  export let id;
-  export let name;
-  export let image = null;
+  export let property;
   export let address = null;
+  export let showImage = false;
+  export let showLogo = false;
+
+  $: id = property && property.id;
+  $: name = property && property.name;
+  $: image = showImage && property && property.photo && property.photo.url;
+  $: logo = showLogo && property && property.logo && property.logo.url;
 </script>
 
 <data value={id}>
@@ -15,9 +20,11 @@
     <Image src={image} alt='Image of {name}' />
   {/if}
 
+  {#if logo}
+    <Image src={logo} alt='{name} Logo' />
+  {/if}
+
   {#if address}
     <Address {address} />
   {/if}
-
-  <slot />
 </data>
