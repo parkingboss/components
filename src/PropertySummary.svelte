@@ -9,19 +9,19 @@
 
   $: id = property && property.id;
   $: name = property && property.name;
-  $: image = showImage && property && property.photo && property.photo.url;
-  $: logo = showLogo && property && property.logo && property.logo.url;
+  $: image = showImage && property && property.photo;
+  $: logo = showLogo && property && property.logo;
 </script>
 
 <data value={id}>
   <h1>{name}</h1>
 
   {#if image}
-    <Image src={image} alt='Image of {name}' />
+    <Image file={image} alt='Image of {name}' />
   {/if}
 
   {#if logo}
-    <Image src={logo} alt='{name} Logo' />
+    <Image file={logo} alt='{name} Logo' />
   {/if}
 
   {#if address}

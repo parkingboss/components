@@ -1,40 +1,32 @@
 <script>
   import Image from './Image.svelte';
-  import { qs, urls } from '@parkingboss/utils';
 
-  const parkingBossUploadRex = /upload\.parkingboss\.com(\/files)?/i;
-  const imgxRoot = 'parking-uploads.imgix.net';
-  const hrefSearch = { auto: "compress,enhance" };
-  const srcSearch = Object.assign({}, hrefSearch, { w: 60, h: 60, fit: 'crop', crop: 'entropy' })
-  const imageTypes = new Set([ 'video', 'image' ]);
+  import { imgx, file as fil } from '@parkingboss/utils';
 
-  export let url;
-  export let filename;
-  export let format = null;
+  export let file;
 
-  function srcAndHref(url, isImage) {
-    if (!isImage) return [url, null];
-
-    const imgxUrl = url.replace(parkingBossUploadRex, imgxRoot);
-    return {
-      src: urls.build(imgxUrl, { query: srcSearch }),
-      src: urls.build(imgxUrl, { query: hrefSearch }),
-    };
-  }
-
-  $: type = format && format.split("/")[0].toLowerCase();
-  $: isImage = imageTypes.has(type);
-  $: fileUrls = srcAndHref(url, isImage);
+  $: image = fil.isImage(file);
+  $: href = image ? imgx.compressed(file.url) : file.url;
 </script>
 
-<a href={fileUrls.href} download={filename}>
-    {#if isImage}
+{#if file}
 
-    <Image src={fileUrls.src} caption={filename} />
+  <a {href} download={file.filename}>
+    {#if image}
+
+    <Image {file} />
 
     {:else}
 
-    {filename}
+    <slot>{file.filename}</slot>
 
     {/if}
-</a>
+  </a>
+
+{:else}
+
+  <data class='file missing'>
+    <slot='no-file' />
+  </data>
+
+{/if}

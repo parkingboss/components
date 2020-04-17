@@ -1,12 +1,19 @@
 <script>
   import { classes } from '@parkingboss/utils';
 
-  export let id;
-  export let type = null;
-  export let format = null;
-  export let display = null;
+  export let contact;
 </script>
 
-<data class={classes('user', type, format)} value={id}>
-  <slot>{display || ''}</slot>
-</data>
+{#if contact}
+
+  <data value={contact.id} class={classes('user', contact.type, contact.format)}>
+    <slot>{contact.display}</slot>
+  </data>
+
+{:else}
+
+  <data class='user missing'>
+    <slot name='no-user'></slot>
+  </data>
+
+{/if}
