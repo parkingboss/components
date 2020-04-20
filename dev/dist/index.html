@@ -2,9 +2,8 @@
 <html>
   <head>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link href=./app.scss rel=stylesheet />
-    <style>
-      body {
+    <link href="/app.55bab2ff.css" rel="stylesheet">
+    <style>body {
         padding-top: 2em;
       }
       nav.mode {
@@ -15,22 +14,21 @@
         height: 2em;
         background-color: cornflowerblue;
         color: black;
-      }
-    </style>
-  </head>
+      }</style>
+  <script src="/app.55bab2ff.js"></script><link rel="stylesheet" href="/app.c328ef1a.css"></head>
   <body>
-    <nav class=mode>
+    <nav class="mode">
       <label>
         Light
-        <input type=radio name=mode value=light checked />
+        <input type="radio" name="mode" value="light" checked="">
       </label>
       <label>
         Dark
-        <input type=radio name=mode value=dark />
+        <input type="radio" name="mode" value="dark">
       </label>
       <label>
         Alternate
-        <input type=radio name=mode value=alternate />
+        <input type="radio" name="mode" value="alternate">
       </label>
     </nav>
     <h1>This is an h1</h1>
@@ -104,21 +102,23 @@
         </tbody>
       </table>
     </section>
-    <section id='svelte' />
-    <script src=./app.js></script>
-    <script>
-      let stopAlternating = null;
-      document.querySelector('nav.mode').addEventListener('input', evt => {
-        if (stopAlternating) stopAlternating();
-        if (evt.target.value === 'alternate') {
-          const id = setInterval(() => {
-            document.documentElement.className = document.documentElement.className === 'dark' ? 'light' : 'dark';
-          }, 3000);
-          stopAlternating = () => clearInterval(id);
-        } else {
-          document.documentElement.className = evt.target.value;
-        }
-      });
-    </script>
-  </body>
+    <section id="svelte">
+    <script src="/app.c328ef1a.js"></script>
+    <script>var stopAlternating = null;
+document.querySelector('nav.mode').addEventListener('input', function (evt) {
+  if (stopAlternating) stopAlternating();
+
+  if (evt.target.value === 'alternate') {
+    var id = setInterval(function () {
+      document.documentElement.className = document.documentElement.className === 'dark' ? 'light' : 'dark';
+    }, 3000);
+
+    stopAlternating = function stopAlternating() {
+      return clearInterval(id);
+    };
+  } else {
+    document.documentElement.className = evt.target.value;
+  }
+});</script>
+  </section></body>
 </html>

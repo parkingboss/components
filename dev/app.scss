@@ -42,9 +42,14 @@
   --text-color: var(--white);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100vh;
   width: 100vw;
+  padding: .5rem;
   font-family: Roboto, Source sans pro, sans-serif;
   color: var(--text-color);
   background-color: var(--background-color);

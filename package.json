@@ -5,15 +5,17 @@
   "main": "dist/index.js",
   "version": "0.2.0",
   "scripts": {
-    "start": "parcel dev/index.html --no-cache",
+    "start": "run-p watch dev",
+    "dev": "pushd dev; npm run demo; popd",
     "build": "rollup -c",
+    "watch": "rollup -cw",
     "prepublishOnly": "npm run build",
     "postversion": "git push && git push --tags && npm publish --access=public"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^6",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-svelte": "^4.0.6",
+    "npm-run-all": "^4.1.5",
     "rollup": "^1.20",
     "rollup-plugin-svelte": "^5.2.1",
     "sass": "^1.26.3",
@@ -27,8 +29,8 @@
     "dist"
   ],
   "dependencies": {
+    "@parkingboss/api": "^0.19.0",
     "@parkingboss/svelte-utils": "^0",
-    "@parkingboss/utils": "^0",
-    "@rollup/plugin-commonjs": "^11.1.0"
+    "@parkingboss/utils": "^0.17.2"
   }
 }

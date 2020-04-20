@@ -6,7 +6,7 @@
   export let file;
 
   $: image = fil.isImage(file);
-  $: href = image ? imgx.compressed(file.url) : file.url;
+  $: href = file && (image ? imgx.compressed(file.url) : file.url);
 </script>
 
 {#if file}
