@@ -9,6 +9,7 @@
     "watch": "rollup -cw",
     "prepublishOnly": "npm run build",
     "postversion": "git push && git push --tags && npm publish --access=public",
+    "storybook-secureish": "start-storybook -p 6006 --https --ssl-cert ./stories/server.cert --ssl-key ./stories/server.key",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

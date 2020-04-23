@@ -43,7 +43,7 @@
   }
 
   function updateFlashlight(camera, f) {
-    if (camera) {
+    if (camera && camera.video) {
       camera.hasFlashlight().then(has => {
         flashlight = f && has;
       });
@@ -102,12 +102,15 @@
 
   onMount(() => {
     let cancelled = false;
-
+    debugger;
     makeCamera(videoEl)
       .then(cam => {
         if (cancelled) {
           cam.remove();
+          alert('oh noes it was canceled')
         } else {
+          alert('got camera!' + camera.video ? ' and video!!' : 'and no video');
+
           camera = cam;
           loading = false;
         }
@@ -127,17 +130,25 @@
     class:video
     class:input>
 
-  <video bind:this={videoEl} autoplay muted playsinline />
+  {#if loading || video}
+    <video bind:this={videoEl} autoplay muted playsinline />
+  {/if}
 
   {#if captured}
     <img alt='captured image' src={URL.createObjectURL(captured)} />
   {/if}
 
-  <label>
-    <input type='file' disabled={captured} accept='image/*' on:input={fileChanged} />
-  </label>
-  <input type='file' disabled={captured} accept='image/*' capture='environment' on:input={fileChanged} />
+  {#if input}
+    <label>
+      <input type='file' disabled={captured} accept='image/*' capture='environment' on:input={fileChanged} />
+    </label>
+  {/if}
 
+  {#if !loading}
+    <label>
+      <input type='file' disabled={captured} accept='image/*' on:input={fileChanged} />
+    </label>
+  {/if}
 
   {#if camera && camera.video}
     {#if capture}
