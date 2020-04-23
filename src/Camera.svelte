@@ -1,0 +1,145 @@
+<script context=module>
+  import { writable } from 'svelte/store';
+
+  const stopGumOnNavigate = window.navigator.standalone;
+
+  export const navigating = writable(false);
+  export function setupPageNavigating(page) {
+    page(() => navigating.set(true));
+    page.exit(() => navigating.set(false));
+  }
+</script>
+
+<script>
+  import { onMount, createEventDispatcher } from 'svelte';
+  import { makeCamera, detectFrameBarcode } from '@parkingboss/barcam';
+
+  export let barcodes = false;
+  export let flashlight = true;
+  export let capture = true;
+  export let freeze = 1; // Seconds
+
+  const dispatch = createEventDispatcher();
+
+  let loading = true;
+  let videoEl = null;
+  let camera = null;
+  let captured = null;
+  let flashlightStatus = false;
+  let stopWatching = null;
+
+  $: video = camera && camera.video;
+  $: input = camera && !camera.video;
+  $: toggleBarcodeMode(camera, barcodes);
+
+  function setCaptured(photo) {
+    captured = photo;
+    new Promise(r => setTimeout(r, freeze * 1000))
+      .then(() => {
+        if (captured === photo) captured = null;
+      });
+  }
+
+  function toggleBarcodeMode(camera, findBarcodes) {
+    if (camera && camera.video && detectBarcodes && !stopWatching) {
+
+      stopWatching = camera.detectAllBarcodes(onBarcode).cancel;
+
+    } else if (stopWatching) {
+
+      stopWatching();
+      stopWatching = null;
+
+    }
+  }
+
+  function onBarcode(barcode) {
+    setCaptured(barcode.photo);
+    dispatch('barcode', barcode);
+  }
+
+  function onCapture(photo) {
+    setCaptured(photo);
+    dispatch('capture', { photo });
+  }
+
+  async function fileChanged(evt) {
+    const frame = evt.target.files[0];
+
+    if (!barcodes) {
+      onCapture(frame);
+    } else {
+      captured = frame;
+      const barcodeResult = detectFrameBarcode(frame);
+      const result = await barcode.value;
+      const photo = await barcode.photo;
+      onBarcode(photo, result);
+    }
+  }
+
+  async function captureClicked(evt) {
+    onCapture(await camera.capture());
+  }
+
+  async function toggleFlashlight(evt) {
+    flashlightStatus = await camera.toggleFlashlight();
+  }
+
+  onMount(() => {
+    let cancelled = false;
+
+    makeCamera(videoEl)
+      .then(cam => {
+        if (cancelled) {
+          cam.remove();
+        } else {
+          camera = cam;
+          loading = false;
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      if (stopWatching) stopWatching();
+      if (camera) camera.remove();
+    };
+  });
+</script>
+
+<figure class="camera"
+    class:busy={captured}
+    class:loading
+    class:video
+    class:input>
+
+  <video bind:this={videoEl} autoplay muted playsinline />
+
+  {#if captured}
+    <img alt='captured image' src={URL.createObjectURL(captured)} />
+  {/if}
+
+  <label>
+    <input type='file' disabled={captured} accept='image/*' on:input={fileChanged} />
+  </label>
+  <input type='file' disabled={captured} accept='image/*' capture='environment' on:input={fileChanged} />
+
+
+  {#if camera && camera.video}
+    {#if capture}
+      <button
+        class='capture'
+        disabled={captured || capture == 'disabled'}
+        on:click={captureClicked}
+      />
+    {/if}
+
+    {#if camera.hasFlashlight() && flashlight}
+      <button
+        class='flashlight {flashlightStatus ? "on" : "off"}'
+        disabled={flashlight == 'disabled'}
+        on:click={toggleFlashlight}
+      />
+    {/if}
+  {/if}
+
+</figure>

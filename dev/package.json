@@ -4,6 +4,7 @@
     "demo": "parcel index.html --no-cache"
   },
   "devDependencies": {
+    "babel-polyfill": "^6.26.0",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-svelte": "^4.0.6"
   }

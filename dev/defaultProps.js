@@ -37,3 +37,9 @@ export const Timestamp = JSON.stringify({
 
 }, null, 2);
 
+export const Camera = JSON.stringify({
+  barcodes: false,
+  flashlight: true,
+  capture: true,
+  freeze: 2,
+}, null, 2);
