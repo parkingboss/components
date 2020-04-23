@@ -28,9 +28,11 @@
   let flashlightStatus = false;
   let stopWatching = null;
 
+  $: updateFlashlight(camera, flashlight);
+  $: toggleBarcodeMode(camera, barcodes);
+
   $: video = camera && camera.video;
   $: input = camera && !camera.video;
-  $: toggleBarcodeMode(camera, barcodes);
 
   function setCaptured(photo) {
     captured = photo;
@@ -40,8 +42,21 @@
       });
   }
 
+  function updateFlashlight(camera, f) {
+    if (camera) {
+      camera.hasFlashlight().then(has => {
+        flashlight = f && has;
+      });
+      camera.getFlashlight().then(isOn => {
+        flashlightStatus = isOn;
+      });
+    } else {
+      flashlight = f;
+    }
+  }
+
   function toggleBarcodeMode(camera, findBarcodes) {
-    if (camera && camera.video && detectBarcodes && !stopWatching) {
+    if (camera && camera.video && findBarcodes && !stopWatching) {
 
       stopWatching = camera.detectAllBarcodes(onBarcode).cancel;
 
@@ -133,7 +148,7 @@
       />
     {/if}
 
-    {#if camera.hasFlashlight() && flashlight}
+    {#if flashlight}
       <button
         class='flashlight {flashlightStatus ? "on" : "off"}'
         disabled={flashlight == 'disabled'}
