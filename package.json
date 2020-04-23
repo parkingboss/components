@@ -5,8 +5,6 @@
   "main": "dist/index.js",
   "version": "0.3.0",
   "scripts": {
-    "start": "run-p watch dev",
-    "dev": "pushd dev; npm run demo; popd",
     "build": "rollup -c",
     "watch": "rollup -cw",
     "prepublishOnly": "npm run build",
