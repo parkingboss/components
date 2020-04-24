@@ -33,6 +33,7 @@
 
   $: video = camera && camera.video;
   $: input = camera && !camera.video;
+  $: showFileSelector = !loading && (barcodes || (capture === true));
 
   function setCaptured(photo) {
     captured = photo;
@@ -141,7 +142,7 @@
     </label>
   {/if}
 
-  {#if !loading}
+  {#if showFileSelector}
     <label>
       <input type='file' disabled={captured} accept='image/*' on:input={fileChanged} />
     </label>
