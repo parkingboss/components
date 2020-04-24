@@ -70,7 +70,7 @@
   }
 
   function onBarcode(barcode) {
-    setCaptured(barcode.photo);
+    if (barcode.value) setCaptured(barcode.photo);
     dispatch('barcode', barcode);
   }
 
