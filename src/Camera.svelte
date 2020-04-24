@@ -5,8 +5,8 @@
 
   export const navigating = writable(false);
   export function setupPageNavigating(page) {
-    page(() => navigating.set(true));
-    page.exit(() => navigating.set(false));
+    page((ctx, next) => { navigating.set(true); next() });
+    page.exit((ctx, next) => { navigating.set(false); next() });
   }
 </script>
 
