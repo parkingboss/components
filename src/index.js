@@ -6,4 +6,5 @@ export { default as Updated } from './Updated.svelte';
 export { default as Note } from './Note.svelte';
 export { default as Timestamp } from './Timestamp.svelte';
 export { default as Time } from './Time.svelte';
+export { default as ValidInterval } from './ValidInterval.svelte';
 export { default as Camera, navigating, setupPageNavigating } from './Camera.svelte';
