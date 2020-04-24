@@ -88,7 +88,7 @@
       const barcodeResult = detectFrameBarcode(frame);
       const result = await barcode.value;
       const photo = await barcode.photo;
-      onBarcode(photo, result);
+      onBarcode(barcodeResult);
     }
   }
 
