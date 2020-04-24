@@ -102,15 +102,12 @@
 
   onMount(() => {
     let cancelled = false;
-    debugger;
+
     makeCamera(videoEl)
       .then(cam => {
         if (cancelled) {
           cam.remove();
-          alert('oh noes it was canceled')
         } else {
-          alert('got camera!' + camera.video ? ' and video!!' : 'and no video');
-
           camera = cam;
           loading = false;
         }
